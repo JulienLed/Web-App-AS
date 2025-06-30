@@ -10,7 +10,7 @@ router.post("/", (req, res, next) => {
       if (err) return next(err);
       res.json({ message: "Connecté", user });
     });
-  });
+  })(req, res, next);
 });
 
 module.exports = router;

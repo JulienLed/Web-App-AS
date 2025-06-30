@@ -8,6 +8,8 @@ const passport = require("passport");
 const initialize = require("./middelwares/passport");
 const logInRouter = require("./routes/login");
 const registrerRouter = require("./routes/registrer");
+const isLogged = require("./middelwares/checkIsLog");
+const clientRouter = require("./routes/client");
 
 dotenv.config();
 
@@ -16,7 +18,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(
   cors({
-    origin: "localhost",
+    origin: process.env.FRONT_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["X-Custom-Header"],
@@ -47,6 +49,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/login", logInRouter);
 app.use("/registrer", registrerRouter);
+app.use(isLogged);
+app.use("/client", clientRouter);
 
 app.listen(PORT, () => {
   console.log("Server is listen on port " + PORT);
