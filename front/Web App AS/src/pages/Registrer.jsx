@@ -2,7 +2,7 @@ import { useState } from "react";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function registrer() {
-  const [userInfo, setUserinfo] = useState({});
+  const [userInfo, setUserinfo] = useState({ role: "as" });
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

@@ -17,4 +17,6 @@ function App() {
   );
 }
 
+// Régler le problème de la fonction de recherche de rdv. Elle ne voit pas bien les rds présents
+
 export default App;
