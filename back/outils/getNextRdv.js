@@ -1,71 +1,96 @@
 const isWeekend = (date) => {
-  const day = date.getDay();
+  const day = date.getUTCDay();
   return day === 0 || day === 6; // dimanche ou samedi
 };
 
 const sameDay = (d1, d2) =>
-  d1.getDate() === d2.getDate() &&
-  d1.getMonth() === d2.getMonth() &&
-  d1.getFullYear() === d2.getFullYear();
+  d1.getUTCDate() === d2.getUTCDate() &&
+  d1.getUTCMonth() === d2.getUTCMonth() &&
+  d1.getUTCFullYear() === d2.getUTCFullYear();
 
 const getNextRdv = (rdvs, duration) => {
-  // Nettoyer et trier
   const now = new Date();
+
+  // Filtrer les rdvs futurs et trier
   const futureRdvs = rdvs
     .map((rdv) => ({
       ...rdv,
-      date: new Date(rdv.year, rdv.month - 1, rdv.day, rdv.hour),
+      date: new Date(rdv.date),
+      duration: Number(rdv.duration),
     }))
     .filter((rdv) => rdv.date > now)
     .sort((a, b) => a.date - b.date);
 
-  let currentDate = new Date();
-  currentDate.setHours(8, 0, 0, 0); // commence à 8h
+  futureRdvs.forEach((rdv) => {
+    const rdvEnd = new Date(rdv.date.getTime() + rdv.duration * 60 * 60 * 1000);
+  });
+
+  // Démarrer à 6h UTC aujourd'hui
+  let currentDate = new Date(
+    Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate(),
+      6,
+      0,
+      0,
+      0
+    )
+  );
+
+  // Si on est déjà passé après 6h UTC, passer au lendemain
+  if (now >= currentDate) {
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+  }
+
+  const slots = [6, 7, 8, 9, 11, 12, 13]; // heures UTC possibles (8h,9h,10h,11h,13h,14h,15h locales)
+  const maxEndHour = 16; // heure max (UTC) à ne pas dépasser (ex: 16h UTC = 18h locale)
 
   while (true) {
-    // Sauter les weekends
     if (isWeekend(currentDate)) {
-      currentDate.setDate(currentDate.getDate() + 1);
-      currentDate.setHours(8, 0, 0, 0);
+      console.log("⛔ Weekend, on saute:", currentDate.toISOString());
+      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+      currentDate.setUTCHours(6, 0, 0, 0);
       continue;
     }
 
-    // Créneaux de travail
-    const slots = [8, 9, 10, 11, 13, 14, 15]; // heure de début possible
-
     for (let hour of slots) {
       const start = new Date(currentDate);
-      start.setHours(hour);
+      start.setUTCHours(hour, 0, 0, 0);
 
-      const end = new Date(start);
-      end.setHours(start.getHours() + duration);
+      const end = new Date(start.getTime() + duration * 60 * 60 * 1000);
 
+      if (end.getUTCHours() > maxEndHour) {
+        continue; // Ce créneau ne convient pas, on saute
+      }
+
+      // Vérifier overlap
       const overlap = futureRdvs.some((rdv) => {
         const rdvStart = rdv.date;
-        const rdvEnd = new Date(rdvStart);
-        rdvEnd.setHours(rdvEnd.getHours() + rdv.duration);
-
-        return (
-          sameDay(rdv.date, start) &&
-          ((start >= rdvStart && start < rdvEnd) ||
-            (end > rdvStart && end <= rdvEnd) ||
-            (start <= rdvStart && end >= rdvEnd))
+        const rdvEnd = new Date(
+          rdvStart.getTime() + rdv.duration * 60 * 60 * 1000
         );
+
+        const isOverlap = start < rdvEnd && rdvStart < end;
+
+        if (isOverlap) {
+        }
+        return isOverlap;
       });
 
       if (!overlap) {
         return {
-          year: start.getFullYear(),
-          month: start.getMonth() + 1,
-          day: start.getDate(),
-          hour: start.getHours(),
+          year: start.getUTCFullYear(),
+          month: start.getUTCMonth() + 1,
+          day: start.getUTCDate(),
+          hour: start.getUTCHours(),
         };
       }
     }
 
-    // Aucun créneau aujourd'hui, on passe au lendemain
-    currentDate.setDate(currentDate.getDate() + 1);
-    currentDate.setHours(8, 0, 0, 0);
+    // Pas de créneau aujourd'hui, on passe au lendemain
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+    currentDate.setUTCHours(6, 0, 0, 0);
   }
 };
 

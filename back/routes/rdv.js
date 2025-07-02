@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const getNextRdv = require("../outils/getNextRdv.js");
+const pool = require("../middelwares/bd.js");
 
 // Créer un nouveau rdv
 router.post("/", async (req, res, next) => {
   try {
-    const { clientId, description, theme } = req.body;
-    const duration = 1;
+    const { description, theme } = req.body;
+    const clientId = req.user.id;
+    let duration = 1;
     switch (theme) {
       case "Bilan budgétaire":
         duration = 2;
@@ -20,17 +22,22 @@ router.post("/", async (req, res, next) => {
     }
     // Logique de chois d'un AS au hasard
     const responseAs = await pool.query(
-      "SELECT * FROM users WHERE role = as ORDER BY RANDOM() LIMIT 1"
+      "SELECT * FROM users WHERE role = $1 ORDER BY RANDOM() LIMIT 1",
+      ["as"]
     );
-    const asId = await responseAs.id;
+    const asId = responseAs.rows[0].id;
     // Obtenir tout les rdv futurs de l'AS par ordre croissant
     const responseRDV = await pool.query(
-      "SELECT * FROM rdv WHERE id = $1 AND date >= NOW() ORDER BY date ASC",
+      "SELECT * FROM rdv WHERE id_as = $1 AND date >= NOW() ORDER BY date ASC",
       [asId]
     );
     const rdvs = responseRDV.rows;
     // Définir le prochain crénau de libre
-    const newRdv = getNextRdv(rdvs, duration);
+    const rdvObj = getNextRdv(rdvs, duration);
+    const newRdv = new Date(
+      Date.UTC(rdvObj.year, rdvObj.month - 1, rdvObj.day, rdvObj.hour)
+    );
+
     const responseNewRdv = await pool.query(
       "INSERT INTO rdv(description, theme, date, duration, id_as, id_client) VALUES($1, $2, $3, $4, $5, $6)",
       [description, theme, newRdv, duration, asId, clientId]
@@ -44,14 +51,15 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// Get les rdvs pas client
-router.get("/:idClient", async (req, res, next) => {
+// Get les rdvs par client
+router.get("/rdvs", async (req, res, next) => {
   try {
     response = await pool.query(
-      "SELECT id, date FROM rdv INNER JOIN users ON rdv.id_client = users.id"
+      "SELECT rdv.id, rdv.date, rdv.duration, rdv.theme FROM rdv INNER JOIN users ON rdv.id_client = users.id"
     );
-    const rdvByClient = response.rows;
-    res.status(200).json({ rdvByClient });
+    const rdvsByClient = response.rows;
+    console.log("Infos client bien transmises");
+    res.status(200).json({ rdvsByClient });
   } catch (error) {
     console.log("Erreur dans le get des rdvs clients : " + error);
     res.status(500).json({ message: error });
@@ -90,9 +98,7 @@ router.put("/:rdvId", async (req, res, next) => {
 router.delete("/rdvId", async (req, res, next) => {
   try {
     const { rdvId } = req.params;
-    const response = await pool.query("DELETE * FROM rdv WHERE id = $1", [
-      rdvId,
-    ]);
+    const response = await pool.query("DELETE FROM rdv WHERE id = $1", [rdvId]);
     res.status(204).json({ rdvId });
   } catch (error) {
     console.log(error);

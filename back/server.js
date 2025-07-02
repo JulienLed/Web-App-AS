@@ -10,6 +10,7 @@ const logInRouter = require("./routes/login");
 const registrerRouter = require("./routes/registrer");
 const isLogged = require("./middelwares/checkIsLog");
 const clientRouter = require("./routes/client");
+const rdvRouter = require("./routes/rdv");
 
 dotenv.config();
 
@@ -21,7 +22,6 @@ app.use(
     origin: process.env.FRONT_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["X-Custom-Header"],
     credentials: true,
     maxAge: 600,
   })
@@ -34,8 +34,9 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 30,
-      secure: process.env.NODE_ENV,
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
+      sameSite: "lax",
     },
     unset: "destroy",
   })
@@ -51,6 +52,7 @@ app.use("/login", logInRouter);
 app.use("/registrer", registrerRouter);
 app.use(isLogged);
 app.use("/client", clientRouter);
+app.use("/rdv", rdvRouter);
 
 app.listen(PORT, () => {
   console.log("Server is listen on port " + PORT);

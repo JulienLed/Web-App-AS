@@ -5,7 +5,8 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 function Client() {
   const [clientInfos, setClientInfos] = useState({});
-  const [rdvInfos, setRdvInfos] = useState({});
+  const [rdvInfos, setRdvInfos] = useState({ theme: "Bilan budgétaire" });
+  const [rdvs, setRdvs] = useState([]);
   const navigate = useNavigate();
 
   //Obtenir et load les infos client
@@ -24,10 +25,29 @@ function Client() {
       console.log("Erreur niveau appel server Client : " + error);
     }
   };
+
+  const getClientRdvs = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/rdv/rdvs`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      console.log("Erreur niveau get rdvs : " + error);
+    }
+  };
+
   useEffect(() => {
     const getData = async () => {
-      const data = await getClientInfos();
-      setClientInfos(data);
+      const dataInfos = await getClientInfos();
+      const dataRdvs = await getClientRdvs();
+      setRdvs(dataRdvs);
+      setClientInfos(dataInfos);
     };
     getData();
   }, []);
@@ -67,6 +87,25 @@ function Client() {
       <h3>{`Bonjour ${clientInfos.name}`}</h3>
       <p>{`Votre nom : ${clientInfos.name}`}</p>
       <p>{`Votre adresse mail : ${clientInfos.mail}`}</p>
+      <p>Vos rendez-vous : </p>
+      <table>
+        <thead>
+          <tr>Thème</tr>
+          <tr>Date</tr>
+          <tr>Durée</tr>
+        </thead>
+        <tbody>
+          {rdvs.map((rdv) => {
+            return (
+              <tr>
+                <th>{rdv.theme}</th>
+                <th>{rdv.date}</th>
+                <th>{rdv.duration}</th>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
       <p>Planifier un rendez-vous</p>
       <p>Choisissez un thème : </p>
       <select

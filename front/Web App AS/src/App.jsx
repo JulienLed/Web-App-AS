@@ -17,6 +17,6 @@ function App() {
   );
 }
 
-// Régler le problème de la fonction de recherche de rdv. Elle ne voit pas bien les rds présents
+// Montrer les infos des rdvs futurs et passés
 
 export default App;
