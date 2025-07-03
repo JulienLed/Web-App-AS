@@ -48,7 +48,6 @@ const getNextRdv = (rdvs, duration) => {
 
   while (true) {
     if (isWeekend(currentDate)) {
-      console.log("⛔ Weekend, on saute:", currentDate.toISOString());
       currentDate.setUTCDate(currentDate.getUTCDate() + 1);
       currentDate.setUTCHours(6, 0, 0, 0);
       continue;

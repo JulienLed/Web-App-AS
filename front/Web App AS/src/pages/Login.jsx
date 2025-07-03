@@ -6,7 +6,7 @@ function Login() {
   const [responseToShow, setResponseToShow] = useState(
     "Pas de réponse Serveur"
   );
-  const [loginInfo, setLoginInfo] = useState({});
+  const [loginInfo, setLoginInfo] = useState({ mail: "", pwd: "" });
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();

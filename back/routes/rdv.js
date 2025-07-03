@@ -3,7 +3,6 @@ const router = express.Router();
 const getNextRdv = require("../outils/getNextRdv.js");
 const pool = require("../middelwares/bd.js");
 
-// Créer un nouveau rdv
 router.post("/", async (req, res, next) => {
   try {
     const { description, theme } = req.body;
@@ -20,34 +19,55 @@ router.post("/", async (req, res, next) => {
         duration = 1;
         break;
     }
-    // Logique de chois d'un AS au hasard
+
+    // Choisir AS au hasard
     const responseAs = await pool.query(
       "SELECT * FROM users WHERE role = $1 ORDER BY RANDOM() LIMIT 1",
       ["as"]
     );
     const asId = responseAs.rows[0].id;
-    // Obtenir tout les rdv futurs de l'AS par ordre croissant
+
+    // Récupérer tous les rdvs futurs de cet AS ET du client (on veut éviter chevauchement avec l'un ou l'autre)
     const responseRDV = await pool.query(
-      "SELECT * FROM rdv WHERE id_as = $1 AND date >= NOW() ORDER BY date ASC",
-      [asId]
+      "SELECT * FROM rdv WHERE (id_as = $1 OR id_client = $2) AND date >= NOW() ORDER BY date ASC",
+      [asId, clientId]
     );
     const rdvs = responseRDV.rows;
-    // Définir le prochain crénau de libre
+
+    // Trouver prochain créneau libre
     const rdvObj = getNextRdv(rdvs, duration);
-    const newRdv = new Date(
+    const newStart = new Date(
       Date.UTC(rdvObj.year, rdvObj.month - 1, rdvObj.day, rdvObj.hour)
     );
+    const newEnd = new Date(newStart.getTime() + duration * 60 * 60 * 1000);
 
-    const responseNewRdv = await pool.query(
+    // Vérifier chevauchement (au cas où getNextRdv ne serait pas fiable à 100%)
+    const overlap = rdvs.some((rdv) => {
+      const rdvStart = new Date(rdv.date);
+      const rdvEnd = new Date(
+        rdvStart.getTime() + rdv.duration * 60 * 60 * 1000
+      );
+      return newStart < rdvEnd && rdvStart < newEnd;
+    });
+
+    if (overlap) {
+      return res
+        .status(400)
+        .json({ message: "Un rendez-vous chevauche ce créneau." });
+    }
+
+    // Insérer le rdv
+    await pool.query(
       "INSERT INTO rdv(description, theme, date, duration, id_as, id_client) VALUES($1, $2, $3, $4, $5, $6)",
-      [description, theme, newRdv, duration, asId, clientId]
+      [description, theme, newStart, duration, asId, clientId]
     );
+
     res
       .status(201)
-      .json({ description, theme, newRdv, duration, asId, clientId });
+      .json({ description, theme, date: newStart, duration, asId, clientId });
   } catch (error) {
     console.log("Erreur dans la création du rdv: " + error);
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -55,11 +75,11 @@ router.post("/", async (req, res, next) => {
 router.get("/rdvs", async (req, res, next) => {
   try {
     response = await pool.query(
-      "SELECT rdv.id, rdv.date, rdv.duration, rdv.theme FROM rdv INNER JOIN users ON rdv.id_client = users.id"
+      "SELECT rdv.id, rdv.date, rdv.duration, rdv.theme, rdv.id_as FROM rdv INNER JOIN users ON rdv.id_client = users.id"
     );
     const rdvsByClient = response.rows;
     console.log("Infos client bien transmises");
-    res.status(200).json({ rdvsByClient });
+    res.status(200).json(rdvsByClient);
   } catch (error) {
     console.log("Erreur dans le get des rdvs clients : " + error);
     res.status(500).json({ message: error });
@@ -95,11 +115,11 @@ router.put("/:rdvId", async (req, res, next) => {
 });
 
 //Delete un rdv par id
-router.delete("/rdvId", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
-    const { rdvId } = req.params;
-    const response = await pool.query("DELETE FROM rdv WHERE id = $1", [rdvId]);
-    res.status(204).json({ rdvId });
+    const { id } = req.params;
+    const response = await pool.query("DELETE FROM rdv WHERE id = $1", [id]);
+    res.status(204).send("Entrée effacée");
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error });

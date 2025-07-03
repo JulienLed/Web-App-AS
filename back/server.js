@@ -11,6 +11,7 @@ const registrerRouter = require("./routes/registrer");
 const isLogged = require("./middelwares/checkIsLog");
 const clientRouter = require("./routes/client");
 const rdvRouter = require("./routes/rdv");
+const asRouter = require("./routes/as");
 
 dotenv.config();
 
@@ -53,6 +54,7 @@ app.use("/registrer", registrerRouter);
 app.use(isLogged);
 app.use("/client", clientRouter);
 app.use("/rdv", rdvRouter);
+app.use("/as", asRouter);
 
 app.listen(PORT, () => {
   console.log("Server is listen on port " + PORT);
