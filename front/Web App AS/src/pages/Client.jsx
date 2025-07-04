@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import getDateInfos from "../components/getDateInfos";
+import handleDisconnect from "../components/handleDisconnect";
 import { AiOutlineClose } from "react-icons/ai";
 import { toast } from "react-toastify";
 import Popup from "reactjs-popup";
-//import "reactjs-popup/dist/index.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -16,7 +16,10 @@ function Client() {
   });
   const [rdvs, setRdvs] = useState([]);
   const [asArr, setAsArr] = useState("");
-  const [isPopup, setIsPopup] = useState(false);
+  const [isPopup, setIsPopup] = useState({
+    validate: false,
+    disconnect: false,
+  });
   const navigate = useNavigate();
 
   //Obtenir et load les infos client
@@ -29,7 +32,20 @@ function Client() {
         },
         credentials: "include",
       });
+      if (response.status === 401) {
+        navigate(`/login`);
+      }
       const responseJson = await response.json();
+      if (responseJson.role === "as") {
+        toast.error(
+          "Les assistants sociaux ne peuvent pas prendre rendez-vous",
+          {
+            autoClose: 2000,
+          }
+        );
+        handleDisconnect(navigate);
+        return;
+      }
       return responseJson;
     } catch (error) {
       console.log("Erreur niveau appel server Client : " + error);
@@ -45,6 +61,7 @@ function Client() {
         },
         credentials: "include",
       });
+      if (response.status === 401) navigate(`/login`);
       const responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -61,6 +78,7 @@ function Client() {
         },
         credentials: "include",
       });
+      if (response.status === 401) navigate(`/login`);
       const responseJson = response.json();
       return responseJson;
     } catch (error) {
@@ -140,9 +158,33 @@ function Client() {
   };
   return (
     <>
+      <Popup
+        className=".popup-content"
+        open={isPopup.disconnect}
+        overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        position={"center"}
+        modal
+        nested
+        closeOnDocumentClick={false}
+      >
+        <p>Etes-vous sure de vouloir vous déconnecter ?</p>
+        <button
+          className="btn_1"
+          onClick={() => {
+            setIsPopup((prev) => ({ ...prev, disconnect: false }));
+            handleDisconnect(navigate);
+          }}
+        >
+          Oui
+        </button>
+        <button
+          className="btn_1"
+          onClick={() => setIsPopup((prev) => ({ ...prev, disconnect: false }))}
+        >
+          Non
+        </button>
+      </Popup>
       <h3>{`Bonjour ${clientInfos.name}`}</h3>
-      <p>{`Votre nom : ${clientInfos.name}`}</p>
-      <p>{`Votre adresse mail : ${clientInfos.mail}`}</p>
       <p>Vos rendez-vous : </p>
       {rdvs.length > 0 ? (
         <table style={{ border: "2px, solid, white" }}>
@@ -180,6 +222,7 @@ function Client() {
       <p>Planifier un rendez-vous</p>
       <p>Choisissez un thème : </p>
       <select
+        value={rdvInfos.theme}
         onChange={(e) => {
           setRdvInfos((prev) => ({ ...prev, theme: e.target.value }));
         }}
@@ -201,24 +244,48 @@ function Client() {
         placeholder="Décriver ici votre situation"
       ></textarea>
       <p>Valider ?</p>
-      <button onClick={() => setIsPopup(true)}>Oui</button>
-      <button>Non</button>
+      <button
+        className="btn_1"
+        onClick={() => setIsPopup((prev) => ({ ...prev, validate: true }))}
+      >
+        Oui
+      </button>
+      <button className="btn_1">Non</button>
       <Popup
-        contentStyle={{
-          border: "2px solid white",
-          borderRadius: "5px",
-          padding: "10px",
-        }}
-        overlayStyle={{ backgroundColor: "grey", opacity: "50%" }}
-        open={isPopup}
+        className=".popup-content"
+        overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        open={isPopup.validate}
         position={"center"}
         modal
         nested
+        closeOnDocumentClick={false}
       >
         <div style={{ paddingBottom: "5px" }}>Etes-vous sure ?</div>
-        <button onClick={(e) => handleOnClick(e)}>Oui</button>
-        <button onClick={(e) => handleOnClick(e)}>Non</button>
+        <button
+          className="btn_1"
+          onClick={(e) => {
+            handleOnClick(e),
+              setIsPopup((prev) => ({ ...prev, validate: false }));
+          }}
+        >
+          Oui
+        </button>
+        <button
+          className="btn_1"
+          onClick={(e) => {
+            handleOnClick(e),
+              setIsPopup((prev) => ({ ...prev, validate: false }));
+          }}
+        >
+          Non
+        </button>
       </Popup>
+      <button
+        className="btn_1"
+        onClick={() => setIsPopup((prev) => ({ ...prev, disconnect: true }))}
+      >
+        Déconnexion
+      </button>
     </>
   );
 }

@@ -1,92 +1,121 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function registrer() {
-  const [userInfo, setUserinfo] = useState({ role: "as" });
+function Registrer({ popup, setPopup }) {
+  const [userInfo, setUserinfo] = useState({
+    role: "as",
+    name: "",
+    mail: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (userInfo.role === "as") {
-        const response = await fetch(`${apiUrl}/registrer/as`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            name: userInfo.name,
-            mail: userInfo.mail,
-            password: userInfo.password,
-          }),
-        });
-        if (response.ok) {
-          console.log("Bien ajouté à la db");
-        } else {
-          console.log(
-            "Il y a eu un problème lors du post du registrer : " +
-              response.message
-          );
-        }
+      const endpoint = userInfo.role === "as" ? "as" : "client";
+      const response = await fetch(`${apiUrl}/registrer/${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name: userInfo.name,
+          mail: userInfo.mail,
+          password: userInfo.password,
+        }),
+      });
+
+      if (response.status === 201) {
+        toast.success(`${userInfo.name} bien enregistré`, { autoClose: 1000 });
+        setUserinfo({ role: "as", name: "", mail: "", password: "" });
+        setTimeout(() => navigate("/login"), 1200);
       } else {
-        const response = await fetch(`${apiUrl}/registrer/client`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            name: userInfo.name,
-            mail: userInfo.mail,
-            password: userInfo.password,
-          }),
-        });
-        if (!response.ok) {
-          console.log("Erreur avec client : " + response.message);
-        }
+        console.log("Erreur lors du post : ", response.message);
       }
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <p name="name">Nom :</p>
-        <input
-          onChange={(e) =>
-            setUserinfo((prev) => ({ ...prev, name: e.target.value }))
-          }
-          value={userInfo.name}
-        ></input>
-        <p name="mail">Adresse mail : </p>
-        <input
-          onChange={(e) =>
-            setUserinfo((prev) => ({ ...prev, mail: e.target.value }))
-          }
-          value={userInfo.mail}
-          type="email"
-        ></input>
-        <p name="password">Mot de passe : </p>
-        <input
-          onChange={(e) =>
-            setUserinfo((prev) => ({ ...prev, password: e.target.value }))
-          }
-          value={userInfo.password}
-          type="password"
-        ></input>
-        <p name="role">Role : </p>
-        <select
-          value={userInfo.role}
-          onChange={(e) =>
-            setUserinfo((prev) => ({ ...prev, role: e.target.value }))
-          }
+      <form className="registerForm" onSubmit={handleSubmit}>
+        <div className="group">
+          <input
+            required
+            type="text"
+            value={userInfo.name}
+            onChange={(e) =>
+              setUserinfo((prev) => ({ ...prev, name: e.target.value }))
+            }
+          />
+          <span className="highlight"></span>
+          <span className="bar"></span>
+          <label>Nom</label>
+        </div>
+
+        <div className="group">
+          <input
+            required
+            type="email"
+            value={userInfo.mail}
+            onChange={(e) =>
+              setUserinfo((prev) => ({ ...prev, mail: e.target.value }))
+            }
+          />
+          <span className="highlight"></span>
+          <span className="bar"></span>
+          <label>Adresse mail</label>
+        </div>
+
+        <div className="group">
+          <input
+            required
+            type="password"
+            value={userInfo.password}
+            onChange={(e) =>
+              setUserinfo((prev) => ({ ...prev, password: e.target.value }))
+            }
+          />
+          <span className="highlight"></span>
+          <span className="bar"></span>
+          <label>Mot de passe</label>
+        </div>
+
+        <div className="group">
+          <select
+            required
+            value={userInfo.role}
+            onChange={(e) => setUserinfo({ ...userInfo, role: e.target.value })}
+          >
+            <option value="" disabled hidden></option>
+            <option value="as">Assistant social</option>
+            <option value="client">Bénéficiaire</option>
+          </select>
+          <span className="highlight"></span>
+          <span className="bar"></span>
+          <label>Rôle</label>
+        </div>
+
+        <button
+          className="btn_1"
+          type="submit"
+          onClick={() => setPopup((prev) => ({ ...prev, registrer: false }))}
         >
-          <option value={"as"}>Assistant social</option>
-          <option value={"client"}>Bénéficiaire</option>
-        </select>
-        <button type="submit">S'enregistrer</button>
+          S'enregistrer
+        </button>
+        <button
+          type="button"
+          className="btn_1"
+          onClick={() => setPopup((prev) => ({ ...prev, registrer: false }))}
+        >
+          Retour
+        </button>
       </form>
     </>
   );
 }
-export default registrer;
+
+export default Registrer;
