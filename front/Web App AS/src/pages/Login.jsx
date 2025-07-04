@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function Login({ popup, setPopup }) {
+function Login({ setPopup }) {
   const [loginInfo, setLoginInfo] = useState({ mail: "", pwd: "" });
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ function Login({ popup, setPopup }) {
         toast.error(resJson.message, { autoClose: 2000 });
       }
     } catch (error) {
-      console.log("Erreur dans le log in : " + error);
+      console.log(error);
     }
   };
 

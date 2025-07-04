@@ -5,6 +5,7 @@ import handleDisconnect from "../components/handleDisconnect";
 import { AiOutlineClose } from "react-icons/ai";
 import { toast } from "react-toastify";
 import Popup from "reactjs-popup";
+import { motion, AnimatePresence } from "framer-motion";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -48,7 +49,7 @@ function Client() {
       }
       return responseJson;
     } catch (error) {
-      console.log("Erreur niveau appel server Client : " + error);
+      console.log(error);
     }
   };
 
@@ -65,7 +66,7 @@ function Client() {
       const responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.log("Erreur niveau get rdvs : " + error);
+      console.log(error);
     }
   };
 
@@ -82,7 +83,7 @@ function Client() {
       const responseJson = response.json();
       return responseJson;
     } catch (error) {
-      console.log("Erreur dans le getAs front : " + error);
+      console.log(error);
     }
   };
 
@@ -117,9 +118,6 @@ function Client() {
             }),
           });
           const responseJson = await response.json();
-          console.log(
-            `La réponse du serveur % validation rdv : ` + responseJson
-          );
         };
         await validateRdv();
         setRdvInfos({ theme: "Bilan budgétaire", description: "" });
@@ -133,7 +131,7 @@ function Client() {
         navigate(0);
       }
     } catch (error) {
-      console.log("Erreur dans le bouton validation rdv : " + error);
+      console.log(error);
     }
   };
 
@@ -147,19 +145,18 @@ function Client() {
         },
         credentials: "include",
       });
-      console.log("Rdv effacé");
       getData();
       toast.success("Rendez-vous annulé", {
         autoClose: 1000,
       });
     } catch (error) {
-      console.log("Erreur dans le delete front : " + error);
+      console.log(error);
     }
   };
   return (
     <>
       <Popup
-        className=".popup-content"
+        className="popup-content"
         open={isPopup.disconnect}
         overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         position={"center"}
@@ -197,23 +194,31 @@ function Client() {
             </tr>
           </thead>
           <tbody>
-            {rdvs.map((rdv) => {
-              return (
-                <tr key={rdv.id}>
-                  <td>{rdv.theme || "Pas de thème"}</td>
-                  <td>{getDateInfos(rdv.date)}</td>
-                  <td
-                    style={{ textAlign: "center" }}
-                  >{`${rdv.duration} heure(s)`}</td>
-                  <td style={{ textAlign: "center" }}>
-                    {asArr.find((as) => as.id === rdv.id_as).name}
-                  </td>
-                  <td>
-                    <AiOutlineClose onClick={() => handleDelete(rdv.id)} />
-                  </td>
-                </tr>
-              );
-            })}
+            <AnimatePresence>
+              {rdvs.map((rdv) => {
+                return (
+                  <motion.tr
+                    key={rdv.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <td>{rdv.theme || "Pas de thème"}</td>
+                    <td>{getDateInfos(rdv.date)}</td>
+                    <td
+                      style={{ textAlign: "center" }}
+                    >{`${rdv.duration} heure(s)`}</td>
+                    <td style={{ textAlign: "center" }}>
+                      {asArr.find((as) => as.id === rdv.id_as).name}
+                    </td>
+                    <td>
+                      <AiOutlineClose onClick={() => handleDelete(rdv.id)} />
+                    </td>
+                  </motion.tr>
+                );
+              })}
+            </AnimatePresence>
           </tbody>
         </table>
       ) : (
@@ -252,7 +257,7 @@ function Client() {
       </button>
       <button className="btn_1">Non</button>
       <Popup
-        className=".popup-content"
+        className="popup-content"
         overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         open={isPopup.validate}
         position={"center"}

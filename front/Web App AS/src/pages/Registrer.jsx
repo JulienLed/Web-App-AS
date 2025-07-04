@@ -32,7 +32,7 @@ function Registrer({ popup, setPopup }) {
         setUserinfo({ role: "as", name: "", mail: "", password: "" });
         setTimeout(() => navigate("/login"), 1200);
       } else {
-        console.log("Erreur lors du post : ", response.message);
+        console.log(response.message);
       }
     } catch (error) {
       console.log(error);

@@ -124,6 +124,18 @@ body {
 }
 .popup-content {
   -webkit-animation: anvil 0.3s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  color: #fff;
+  text-align: center;
+  border: 1px solid #555;
+}
+
+.popup-content p {
+  margin-bottom: 20px;
 }
 
 /*Le formulaire login*/
@@ -372,4 +384,97 @@ body {
 .registerForm .group input:focus ~ .highlight,
 .registerForm .group select:focus ~ .highlight {
   animation: inputHighlighter 0.3s ease;
+}
+
+/*Pour Client*/
+h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  color: #ddd;
+  margin: 10px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border: 1px solid #444;
+  text-align: left;
+}
+
+table th {
+  background-color: #333;
+  font-weight: bold;
+}
+
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  background-color: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+textarea::placeholder {
+  color: #aaa;
+}
+
+/*Les toasts*/
+/* Toast général */
+.Toastify__toast {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border-left: 5px solid #5c5cff;
+  font-family: "Arial", sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+/* Succès */
+.Toastify__toast--success {
+  border-left-color: #4caf50;
+}
+
+/* Erreur */
+.Toastify__toast--error {
+  border-left-color: #f44336;
+}
+
+/* Info */
+.Toastify__toast--info {
+  border-left-color: #2196f3;
+}
+
+/* Warning */
+.Toastify__toast--warning {
+  border-left-color: #ff9800;
+}
+
+/* Progress bar */
+.Toastify__progress-bar {
+  background: #5c5cff;
+}
+
+/* Close button */
+.Toastify__close-button {
+  color: #aaa;
+}
+
+.Toastify__close-button:hover {
+  color: #fff;
 }

@@ -9,10 +9,9 @@ const handleDisconnect = async (navigate) => {
       },
       credentials: "include",
     }),
-      console.log("Déconnecté");
-    navigate("/");
+      navigate("/");
   } catch (error) {
-    console.log("Erreur dans le logout front : " + error);
+    console.log(error);
   }
 };
 export default handleDisconnect;

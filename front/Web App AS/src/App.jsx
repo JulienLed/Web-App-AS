@@ -32,6 +32,4 @@ function App() {
   );
 }
 
-// Montrer les infos des rdvs futurs et passés
-
 export default App;

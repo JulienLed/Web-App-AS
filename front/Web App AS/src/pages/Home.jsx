@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router";
 import styles from "../css/Home.module.css";
 import Registrer from "./Registrer";
 import Login from "./Login";
 import Popup from "reactjs-popup";
 
 function Home({ popup, setPopup }) {
-  const navigate = useNavigate();
   const handleClick = (e) => {
     if (e.target.value === "login") {
       setPopup((prev) => ({ ...prev, login: true }));
