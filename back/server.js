@@ -62,13 +62,13 @@ app.use(passport.session());
 
 const PORT = process.env.PORT || 3000;
 
-app.use("/login", logInRouter);
-app.use("/registrer", registrerRouter);
+app.use("login", logInRouter);
+app.use("registrer", registrerRouter);
 app.use(isLogged);
-app.use("/client", clientRouter);
-app.use("/rdv", rdvRouter);
-app.use("/as", asRouter);
-app.use("/logout", logOutRouter);
+app.use("client", clientRouter);
+app.use("rdv", rdvRouter);
+app.use("as", asRouter);
+app.use("logout", logOutRouter);
 
 app.listen(PORT, () => {
   console.log("Server is listen on port " + PORT);
