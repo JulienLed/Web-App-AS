@@ -30,6 +30,7 @@ app.use(
     maxAge: 6000,
   })
 );
+app.set("trust proxy", 1); // 👈 obligatoire sur Render
 
 app.use(
   session({
