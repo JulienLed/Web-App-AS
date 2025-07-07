@@ -13,10 +13,18 @@ const clientRouter = require("./routes/client");
 const rdvRouter = require("./routes/rdv");
 const asRouter = require("./routes/as");
 const logOutRouter = require("./routes/logout");
+const pgSession = require("connect-pg-simple")(session);
 
 dotenv.config();
 
-//app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
 app.use(express.json());
 app.use(
@@ -31,12 +39,13 @@ app.use(
 
 app.use(
   session({
+    store: new pgSession({ pool }),
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 30,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       httpOnly: true,
       sameSite: "none",
     },
