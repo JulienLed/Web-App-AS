@@ -16,7 +16,7 @@ const logOutRouter = require("./routes/logout");
 
 dotenv.config();
 
-app.use(helmet());
+//app.use(helmet());
 
 app.use(express.json());
 app.use(
