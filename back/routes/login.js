@@ -21,23 +21,6 @@ router.post("/", (req, res, next) => {
   })(req, res, next);
 });
 
-passport.authenticate("local", (err, user, info) => {
-  if (err || !user) {
-    console.log("Erreur auth:", err, info);
-    return res.status(401).json({ message: "Mauvais identifiants" });
-  }
-
-  req.login(user, (err) => {
-    if (err) {
-      console.log("Erreur login():", err);
-      return res.status(500).json({ message: "Erreur session" });
-    }
-
-    console.log("✅ Login réussi. Session ID:", req.sessionID);
-    res.status(200).json({ message: "Connecté", user });
-  });
-})(req, res);
-
 router.get("/google", passport.authenticate("google"));
 
 router.get(
