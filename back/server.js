@@ -16,19 +16,7 @@ const logOutRouter = require("./routes/logout");
 
 dotenv.config();
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        fontSrc: ["'self'", "data:"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", "data:"],
-      },
-    },
-  })
-);
+app.use(helmet());
 
 app.use(express.json());
 app.use(
@@ -45,7 +33,7 @@ app.use(
   session({
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 30,
       secure: process.env.NODE_ENV === "production",
