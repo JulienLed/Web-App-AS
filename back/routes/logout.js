@@ -5,6 +5,9 @@ router.post("/logout", (req, res, next) => {
     if (err) {
       return next(err);
     }
+    req.session.destroy((err) => {
+      if (err) return err;
+    });
     res.clearCookie("connect.sid");
     res.status(200).json({ message: "Déconnexion réussie" });
   });

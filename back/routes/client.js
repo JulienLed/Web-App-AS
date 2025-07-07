@@ -11,7 +11,6 @@ router.get("/", async (req, res, next) => {
     ]);
     res.status(200).send(response.rows[0]);
   } catch (error) {
-    console.log("Erreur niveau get client : " + error);
     res.status(500).json({ message: error });
   }
 });

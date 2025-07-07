@@ -32,7 +32,8 @@ function Registrer({ popup, setPopup }) {
         setUserinfo({ role: "as", name: "", mail: "", password: "" });
         setTimeout(() => navigate("/login"), 1200);
       } else {
-        console.log(response.message);
+        const responseJson = await response.json();
+        toast.error(responseJson.message);
       }
     } catch (error) {
       console.log(error);

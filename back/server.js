@@ -16,7 +16,19 @@ const logOutRouter = require("./routes/logout");
 
 dotenv.config();
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        fontSrc: ["'self'", "data:"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", "data:"],
+      },
+    },
+  })
+);
 
 app.use(express.json());
 app.use(

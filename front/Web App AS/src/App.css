@@ -393,6 +393,14 @@ h3 {
   margin-bottom: 1rem;
 }
 
+.buttonDeleteRdv {
+  transition: color 0.3s ease-in-out;
+}
+
+.buttonDeleteRdv:hover {
+  color: red;
+}
+
 p {
   color: #ddd;
   margin: 10px 0;

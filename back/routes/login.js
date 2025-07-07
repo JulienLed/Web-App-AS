@@ -16,4 +16,15 @@ router.post("/", (req, res, next) => {
   })(req, res, next);
 });
 
+router.get("/google", passport.authenticate("google"));
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    failureMessage: true,
+  }),
+  (req, res, next) => res.redirect(`${process.env.FRONT_URL}/client`)
+);
+
 module.exports = router;

@@ -16,10 +16,12 @@ function Client() {
     description: "",
   });
   const [rdvs, setRdvs] = useState([]);
+  const [idRdv, setIdRdv] = useState(0);
   const [asArr, setAsArr] = useState("");
   const [isPopup, setIsPopup] = useState({
     validate: false,
     disconnect: false,
+    deleteRdv: false,
   });
   const navigate = useNavigate();
 
@@ -157,6 +159,32 @@ function Client() {
     <>
       <Popup
         className="popup-content"
+        open={isPopup.deleteRdv}
+        overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        position={"center"}
+        modal
+        nested
+        closeOnDocumentClick={false}
+      >
+        <p>Etes-vous sure de vouloir annuler ce rendez-vous ?</p>
+        <button
+          className="btn_1"
+          onClick={() => {
+            handleDelete(idRdv);
+            setIsPopup((prev) => ({ ...prev, deleteRdv: false }));
+          }}
+        >
+          Oui
+        </button>
+        <button
+          className="btn_1"
+          onClick={() => setIsPopup((prev) => ({ ...prev, deleteRdv: false }))}
+        >
+          Non
+        </button>
+      </Popup>
+      <Popup
+        className="popup-content"
         open={isPopup.disconnect}
         overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         position={"center"}
@@ -213,7 +241,13 @@ function Client() {
                       {asArr.find((as) => as.id === rdv.id_as).name}
                     </td>
                     <td>
-                      <AiOutlineClose onClick={() => handleDelete(rdv.id)} />
+                      <AiOutlineClose
+                        className="buttonDeleteRdv"
+                        onClick={() => {
+                          setIdRdv(rdv.id);
+                          setIsPopup((prev) => ({ ...prev, deleteRdv: true }));
+                        }}
+                      />
                     </td>
                   </motion.tr>
                 );

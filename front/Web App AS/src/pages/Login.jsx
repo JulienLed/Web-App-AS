@@ -68,7 +68,10 @@ function Login({ setPopup }) {
       <button
         type="button"
         className="btn_1"
-        onClick={() => setPopup((prev) => ({ ...prev, login: false }))}
+        onClick={() => {
+          setPopup((prev) => ({ ...prev, login: false }));
+          navigate(`/`);
+        }}
       >
         Retour
       </button>

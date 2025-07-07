@@ -3,11 +3,6 @@ const isWeekend = (date) => {
   return day === 0 || day === 6; // dimanche ou samedi
 };
 
-const sameDay = (d1, d2) =>
-  d1.getUTCDate() === d2.getUTCDate() &&
-  d1.getUTCMonth() === d2.getUTCMonth() &&
-  d1.getUTCFullYear() === d2.getUTCFullYear();
-
 const getNextRdv = (rdvs, duration) => {
   const now = new Date();
 

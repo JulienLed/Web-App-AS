@@ -66,7 +66,6 @@ router.post("/", async (req, res, next) => {
       .status(201)
       .json({ description, theme, date: newStart, duration, asId, clientId });
   } catch (error) {
-    console.log("Erreur dans la création du rdv: " + error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -75,13 +74,12 @@ router.post("/", async (req, res, next) => {
 router.get("/rdvs", async (req, res, next) => {
   try {
     response = await pool.query(
-      "SELECT rdv.id, rdv.date, rdv.duration, rdv.theme, rdv.id_as FROM rdv INNER JOIN users ON rdv.id_client = users.id"
+      "SELECT rdv.id, rdv.date, rdv.duration, rdv.theme, rdv.id_as FROM rdv INNER JOIN users ON rdv.id_client = users.id WHERE rdv.id_client =$1",
+      [req.user.id]
     );
     const rdvsByClient = response.rows;
-    console.log("Infos client bien transmises");
     res.status(200).json(rdvsByClient);
   } catch (error) {
-    console.log("Erreur dans le get des rdvs clients : " + error);
     res.status(500).json({ message: error });
   }
 });
@@ -103,7 +101,7 @@ router.put("/:rdvId", async (req, res, next) => {
         duration = 1;
         break;
     }
-    const response = await pool.query(
+    await pool.query(
       "UPDATE rdv SET description = $1, theme = $2, date = $3, duration = $4 WHERE id = $5 AND id_client = $6",
       [description, theme, date, duration, rdvId, clientId]
     );
@@ -118,10 +116,9 @@ router.put("/:rdvId", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const response = await pool.query("DELETE FROM rdv WHERE id = $1", [id]);
+    await pool.query("DELETE FROM rdv WHERE id = $1", [id]);
     res.status(204).send("Entrée effacée");
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: error });
   }
 });
