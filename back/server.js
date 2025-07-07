@@ -14,6 +14,7 @@ const rdvRouter = require("./routes/rdv");
 const asRouter = require("./routes/as");
 const logOutRouter = require("./routes/logout");
 const pgSession = require("connect-pg-simple")(session);
+const pool = require("../middelwares/bd");
 
 dotenv.config();
 
