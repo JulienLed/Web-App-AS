@@ -18,20 +18,14 @@ router.post("/", (req, res, next) => {
         console.log("❌ Erreur logIn:", err);
         return next(err);
       }
-
-      console.log("✅ Auth OK pour", user.mail);
-      console.log("🧠 Session ID:", req.sessionID);
-      console.log("🍪 Session complète:", req.session);
-
       // Forcer un save explicite de la session
       req.session.save((err) => {
         if (err) {
-          console.log("❌ Erreur save session:", err);
           return res.status(500).json({ message: "Erreur session" });
         }
 
         // Réponse OK après session bien enregistrée
-        res.status(200).json({ message: "Connecté", user });
+        res.status(200).json({ message: "Connecté" });
       });
     });
   })(req, res, next);
