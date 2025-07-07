@@ -18,14 +18,7 @@ const pool = require("./middelwares/bd");
 
 dotenv.config();
 
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
-    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
-);
+app.use(helmet());
 
 app.use(express.json());
 app.use(
@@ -34,7 +27,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-    maxAge: 600,
+    maxAge: 6000,
   })
 );
 
@@ -45,6 +38,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
+      path: "/",
       maxAge: 1000 * 60 * 30,
       secure: true,
       httpOnly: true,
