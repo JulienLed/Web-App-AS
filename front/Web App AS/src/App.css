@@ -490,7 +490,8 @@ textarea::placeholder {
 @media (max-width: 480px) {
   body {
     font-size: 90%;
-    padding: 10px;
+    padding: 0.5rem;
+    width: 100%;
   }
 
   .title {
@@ -506,12 +507,12 @@ textarea::placeholder {
 
   .buttons {
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5rem;
   }
 
   .btn_1 {
     width: 100%;
-    padding: 12px 0;
+    padding: 0.5rem 0;
     margin: 0;
   }
 
@@ -522,14 +523,14 @@ textarea::placeholder {
   }
 
   .registerForm .group {
-    margin-bottom: 25px;
+    margin-bottom: 2rem;
   }
 
   .bg_container {
     width: 100vw;
     height: auto;
-    padding: 15px;
-    margin-top: 5px;
+    padding: 1rem;
+    margin-top: 0.3px;
   }
 
   .bg_grid {
@@ -538,7 +539,7 @@ textarea::placeholder {
   }
 
   .flex {
-    margin: 10px 0;
+    margin: 0.5rem 0;
     width: 100%;
   }
 }
