@@ -590,4 +590,10 @@ textarea::placeholder {
     letter-spacing: 2px;
     margin: 0 0.5rem;
   }
+  .p_client {
+    font-size: 0.8rem;
+  }
+  .table_client {
+    font-size: 0.6rem;
+  }
 }

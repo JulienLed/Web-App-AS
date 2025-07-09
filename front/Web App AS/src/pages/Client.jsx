@@ -166,7 +166,9 @@ function Client() {
         nested
         closeOnDocumentClick={false}
       >
-        <p>Etes-vous sure de vouloir annuler ce rendez-vous ?</p>
+        <p className="p_client">
+          Etes-vous sure de vouloir annuler ce rendez-vous ?
+        </p>
         <button
           className="btn_1"
           onClick={() => {
@@ -192,7 +194,7 @@ function Client() {
         nested
         closeOnDocumentClick={false}
       >
-        <p>Etes-vous sure de vouloir vous déconnecter ?</p>
+        <p className="p_client">Etes-vous sure de vouloir vous déconnecter ?</p>
         <button
           className="btn_1"
           onClick={() => {
@@ -210,9 +212,9 @@ function Client() {
         </button>
       </Popup>
       <h3>{`Bonjour ${clientInfos.name}`}</h3>
-      <p>Vos rendez-vous : </p>
+      <p className="p_client">Vos rendez-vous : </p>
       {rdvs.length > 0 ? (
-        <table style={{ border: "2px, solid, white" }}>
+        <table className="table_client" style={{ border: "2px, solid, white" }}>
           <thead>
             <tr>
               <th scope="col">Thème</th>
@@ -258,8 +260,8 @@ function Client() {
       ) : (
         "Pas de rendez-vous prévu"
       )}
-      <p>Planifier un rendez-vous</p>
-      <p>Choisissez un thème : </p>
+      <p className="p_client">Planifier un rendez-vous</p>
+      <p className="p_client">Choisissez un thème : </p>
       <select
         value={rdvInfos.theme}
         onChange={(e) => {
@@ -272,7 +274,9 @@ function Client() {
         <option value="Réorientation">Réorientation</option>
         <option value="Création réseau">Création réseau</option>
       </select>
-      <p>Pour un suivi personnalisé, expliquer ici votre situation : </p>
+      <p className="p_client">
+        Pour un suivi personnalisé, expliquer ici votre situation :{" "}
+      </p>
       <textarea
         cols={100}
         rows={10}
@@ -282,7 +286,7 @@ function Client() {
         }}
         placeholder="Décriver ici votre situation"
       ></textarea>
-      <p>Valider ?</p>
+      <p className="p_client">Valider ?</p>
       <button
         className="btn_1"
         onClick={() => setIsPopup((prev) => ({ ...prev, validate: true }))}
