@@ -1,6 +1,4 @@
-/* ===== ANIMATIONS ===== */
-
-/* Animation du titre de Home */
+/*Animation du titre de Home*/
 @keyframes lights {
   0% {
     color: hsl(230, 40%, 80%);
@@ -9,6 +7,7 @@
       -1em -0.125em 0.5em hsla(40, 100%, 60%, 0),
       1em 0.125em 0.5em hsla(200, 100%, 60%, 0);
   }
+
   30% {
     color: hsl(230, 80%, 90%);
     text-shadow: 0 0 1em hsla(320, 100%, 50%, 0.5),
@@ -16,6 +15,7 @@
       -0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
       0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
   }
+
   40% {
     color: hsl(230, 100%, 95%);
     text-shadow: 0 0 1em hsla(320, 100%, 50%, 0.5),
@@ -23,6 +23,7 @@
       -0.25em -0.125em 0.125em hsla(40, 100%, 60%, 0.2),
       0.25em 0.125em 0.125em hsla(200, 100%, 60%, 0.4);
   }
+
   70% {
     color: hsl(230, 80%, 90%);
     text-shadow: 0 0 1em hsla(320, 100%, 50%, 0.5),
@@ -30,6 +31,7 @@
       0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
       -0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
   }
+
   100% {
     color: hsl(230, 40%, 80%);
     text-shadow: 0 0 1em hsla(320, 100%, 50%, 0.2),
@@ -39,50 +41,6 @@
   }
 }
 
-/* Animation popup */
-@keyframes anvil {
-  0% {
-    transform: scale(1) translateY(0px);
-    opacity: 0;
-    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
-  }
-  1% {
-    transform: scale(0.96) translateY(10px);
-    opacity: 0;
-    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
-  }
-  100% {
-    transform: scale(1) translateY(0px);
-    opacity: 1;
-    box-shadow: 0 0 500px rgba(241, 241, 241, 0);
-  }
-}
-
-/* Animation highlight input */
-@keyframes inputHighlighter {
-  from {
-    background: #5264ae;
-  }
-  to {
-    width: 0;
-    background: transparent;
-  }
-}
-
-/* ===== GLOBAL ===== */
-
-body {
-  margin: 0;
-  height: 100vh;
-  font: 100% / 1.5 Raleway, sans-serif;
-  color: hsl(230, 100%, 95%);
-  background: linear-gradient(135deg, hsl(230, 40%, 12%), hsl(230, 20%, 7%));
-  display: flex;
-  justify-content: center;
-}
-
-/* ===== TITLES ===== */
-
 .title {
   margin: auto;
   justify-self: center;
@@ -91,27 +49,30 @@ body {
   animation: lights 5s 750ms linear infinite;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  font: 100% / 1.5 Raleway, sans-serif;
+  color: hsl(230, 100%, 95%);
+  background: linear-gradient(135deg, hsl(230, 40%, 12%), hsl(230, 20%, 7%));
+  height: 100vh;
+  display: flex;
+}
+
 .title2 {
   text-align: center;
   margin: 0 30rem;
   color: hsl(230, 100%, 95%);
 }
 
-h3 {
-  color: #fff;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-/* ===== BUTTONS ===== */
-
+/*Les boutons sur la page Home*/
 .buttons {
   display: flex;
   justify-content: center;
 }
 
 .btn_1 {
-  position: relative;
   text-align: center;
   color: hsl(230, 100%, 95%);
   display: inline-block;
@@ -121,6 +82,7 @@ h3 {
   background: linear-gradient(135deg, hsl(230, 40%, 20%), hsl(230, 20%, 17%));
   cursor: pointer;
   letter-spacing: 2px;
+  position: relative;
   overflow: hidden;
   margin: 0 20px;
 }
@@ -142,17 +104,41 @@ h3 {
   left: 95%;
 }
 
-.buttonDeleteRdv {
-  transition: color 0.3s ease-in-out;
+/*Animation des popups*/
+@keyframes anvil {
+  0% {
+    transform: scale(1) translateY(0px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  1% {
+    transform: scale(0.96) translateY(10px);
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+  }
+  100% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+    box-shadow: 0 0 500px rgba(241, 241, 241, 0);
+  }
+}
+.popup-content {
+  -webkit-animation: anvil 0.3s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  color: #fff;
+  text-align: center;
+  border: 1px solid #555;
 }
 
-.buttonDeleteRdv:hover {
-  color: red;
+.popup-content p {
+  margin-bottom: 20px;
 }
 
-/* ===== FORMS ===== */
-
-/* Login form */
+/*Le formulaire login*/
 .loginForm {
   display: flex;
   flex-direction: column;
@@ -169,7 +155,125 @@ h3 {
   border-radius: 5px;
 }
 
-/* Register form */
+.group {
+  position: relative;
+}
+
+.group input {
+  font-size: 18px;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #757575;
+  background: transparent;
+  color: #fff;
+}
+
+.group input:focus {
+  outline: none;
+}
+
+.group label {
+  color: #999;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  transition: 0.2s ease all;
+}
+
+/* Label qui se déplace */
+.group input:focus ~ label,
+.group input:valid ~ label {
+  top: -20px;
+  font-size: 14px;
+  color: #5264ae;
+}
+
+/* Barre animée */
+.bar {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.bar:before,
+.bar:after {
+  content: "";
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  background: #5264ae;
+  transition: 0.2s ease all;
+}
+
+.bar:before {
+  left: 50%;
+}
+
+.bar:after {
+  right: 50%;
+}
+
+.group input:focus ~ .bar:before,
+.group input:focus ~ .bar:after {
+  width: 50%;
+}
+
+/* Animation highlight */
+.highlight {
+  position: absolute;
+  height: 60%;
+  width: 100px;
+  top: 25%;
+  left: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.group input:focus ~ .highlight {
+  animation: inputHighlighter 0.3s ease;
+}
+
+@keyframes inputHighlighter {
+  from {
+    background: #5264ae;
+  }
+  to {
+    width: 0;
+    background: transparent;
+  }
+}
+
+/*En plus pour le select de Registrer*/
+
+.selectInput {
+  width: 100%;
+  padding: 10px 5px;
+  font-size: 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #757575;
+  color: #fff;
+}
+
+.selectInput:focus {
+  outline: none;
+  border-bottom: 2px solid #5264ae;
+}
+
+.selectLabel {
+  display: block;
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+/* Formulaire register */
 .registerForm {
   display: flex;
   flex-direction: column;
@@ -181,14 +285,14 @@ h3 {
   padding: 1.5rem;
 }
 
-/* Inputs and selects inside register */
+/* Inputs et Select dans register */
 .registerForm input,
 .registerForm select {
   border: 1px solid #fff;
   border-radius: 5px;
 }
 
-/* Groups inside register */
+/* Groupe d'inputs */
 .registerForm .group {
   position: relative;
   margin-bottom: 45px;
@@ -211,7 +315,7 @@ h3 {
   outline: none;
 }
 
-/* Animated labels in register */
+/* Labels animés */
 .registerForm .group label {
   color: #999;
   font-size: 18px;
@@ -223,6 +327,7 @@ h3 {
   transition: 0.2s ease all;
 }
 
+/* Label flottant sur focus ou valeur */
 .registerForm .group input:focus ~ label,
 .registerForm .group input:valid ~ label,
 .registerForm .group select:focus ~ label,
@@ -232,6 +337,7 @@ h3 {
   color: #5264ae;
 }
 
+/* Barre animée */
 .registerForm .bar {
   position: relative;
   display: block;
@@ -264,76 +370,121 @@ h3 {
   width: 50%;
 }
 
-/* Highlight effect */
+/* Animation highlight */
 .registerForm .highlight {
   position: absolute;
   height: 60%;
+  width: 100px;
   top: 25%;
   left: 0;
   pointer-events: none;
   opacity: 0.5;
 }
 
-/* ===== ERRORS ===== */
-
-.error {
-  color: #ff5f5f;
-  font-size: 14px;
-  font-weight: 600;
+.registerForm .group input:focus ~ .highlight,
+.registerForm .group select:focus ~ .highlight {
+  animation: inputHighlighter 0.3s ease;
 }
 
-/* ===== ADDITIONAL ===== */
-
-/* Popup container */
-.popup_container {
-  margin: auto;
-  max-width: 80vw;
-  max-height: 80vh;
-  overflow-y: auto;
+/*Pour Client*/
+h3 {
   color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-/* Container with flex layout */
-.container {
-  display: flex;
-  justify-content: center;
-  padding: 0.8rem;
+.buttonDeleteRdv {
+  transition: color 0.3s ease-in-out;
 }
 
-/* Background container */
-.bg_container {
-  width: 80vw;
-  height: 80vh;
-  background: linear-gradient(135deg, hsl(230, 40%, 12%), hsl(230, 20%, 7%));
-  box-shadow: 0 0 10px 2px hsl(230, 20%, 7%);
+.buttonDeleteRdv:hover {
+  color: red;
+}
+
+p {
+  color: #ddd;
+  margin: 10px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border: 1px solid #444;
+  text-align: left;
+}
+
+table th {
+  background-color: #333;
+  font-weight: bold;
+}
+
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  background-color: #111;
+  color: #fff;
+  border: 1px solid #444;
   border-radius: 5px;
-  padding: 20px 10px;
-  margin-top: 10px;
+  margin: 10px 0;
 }
 
-/* Flexbox grid inside background */
-.bg_grid {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
+textarea::placeholder {
+  color: #aaa;
 }
 
-/* Flex items */
-.flex {
-  flex: 1;
-  margin: 0 10px;
+/*Les toasts*/
+/* Toast général */
+.Toastify__toast {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border-left: 5px solid #5c5cff;
+  font-family: "Arial", sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .title2 {
-    margin: 0 1rem;
-  }
-  .btn_1 {
-    padding: 10px 25px;
-    margin: 0 10px;
-  }
+/* Succès */
+.Toastify__toast--success {
+  border-left-color: #4caf50;
+}
+
+/* Erreur */
+.Toastify__toast--error {
+  border-left-color: #f44336;
+}
+
+/* Info */
+.Toastify__toast--info {
+  border-left-color: #2196f3;
+}
+
+/* Warning */
+.Toastify__toast--warning {
+  border-left-color: #ff9800;
+}
+
+/* Progress bar */
+.Toastify__progress-bar {
+  background: #5c5cff;
+}
+
+/* Close button */
+.Toastify__close-button {
+  color: #aaa;
+}
+
+.Toastify__close-button:hover {
+  color: #fff;
 }
 
 @media (max-width: 480px) {
