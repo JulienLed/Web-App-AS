@@ -1,4 +1,3 @@
-import styles from "../css/Home.module.css";
 import Registrer from "./Registrer";
 import Login from "./Login";
 import Popup from "reactjs-popup";
@@ -21,47 +20,47 @@ function Home({ popup, setPopup }) {
   };
   return (
     <>
-      <div className={styles.title}>
-        <h1>Webb App AS</h1>
+      <div className="title">
+        <h1>Web App AS</h1>
       </div>
-      <div className={styles.buttons}>
+      <div className="buttons">
         <button
-          className={styles.btn_1}
+          className="btn_1"
           value={"login"}
           onClick={(e) => handleClick(e)}
         >
           Vers le login
         </button>
         <button
-          className={styles.btn_1}
+          className="btn_1"
           value={"google"}
           onClick={(e) => handleClick(e)}
         >
           Login avec Google
         </button>
         <button
-          className={styles.btn_1}
+          className="btn_1"
           value={"registrer"}
           onClick={(e) => handleClick(e)}
         >
           Vers l'enregistrement
         </button>
       </div>
-      <div className={styles.cursor_container}>
-        <p className={`${styles.cursor} ${styles.typewriter1}`}>
+      <div className="cursor_container">
+        <p className="cursor typewriter1">
           Cette application vous permet de prendre rendez-vous avec
         </p>
-        <p className={`${styles.cursor} ${styles.typewriter2}`}>
+        <p className="cursor typewriter2">
           l'un de nos nombreux assistants sociaux. Le rendez-vous
         </p>
-        <p className={`${styles.cursor} ${styles.typewriter3}`}>
+        <p className="cursor typewriter3">
           le plus proche sera automatiquement sélectionné.
         </p>
       </div>
 
       <div>
         <Popup
-          className=".popup-content"
+          className="popup-content"
           open={popup.login}
           overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
           position={"center"}
@@ -72,7 +71,7 @@ function Home({ popup, setPopup }) {
           <Login popup={popup} setPopup={setPopup} />
         </Popup>
         <Popup
-          className=".popup-content"
+          className="popup-content"
           overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
           open={popup.registrer}
           position={"center"}
