@@ -7,24 +7,18 @@ router.post("/", (req, res, next) => {
     if (err) return next(err);
 
     if (!user) {
-      console.log("❌ Auth échouée:", info);
       return res
         .status(401)
         .json({ message: "Pas d'utilisateur avec cet adresse mail" });
     }
-
     req.logIn(user, (err) => {
       if (err) {
-        console.log("❌ Erreur logIn:", err);
         return next(err);
       }
-      // Forcer un save explicite de la session
       req.session.save((err) => {
         if (err) {
           return res.status(500).json({ message: "Erreur session" });
         }
-
-        // Réponse OK après session bien enregistrée
         res.status(200).json({ message: "Connecté" });
       });
     });
