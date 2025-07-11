@@ -3,7 +3,6 @@ const app = express();
 const dotenv = require("dotenv");
 const cors = require("cors");
 const helmet = require("helmet");
-const { contentSecurityPolicy } = require("helmet");
 const session = require("express-session");
 const passport = require("passport");
 const initialize = require("./middelwares/passport");
@@ -18,19 +17,6 @@ const logOutRouter = require("./routes/logout");
 dotenv.config();
 
 app.use(helmet());
-
-app.use(
-  contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      fontSrc: ["'self'", "data:"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:"],
-      objectSrc: ["'none'"],
-    },
-  })
-);
 
 app.use(express.json());
 app.use(
